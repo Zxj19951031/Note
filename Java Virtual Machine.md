@@ -17,3 +17,6 @@ JAVA虚拟机是一个执行JAVA字节码文件（*.class）的进程。
 - 为静态成员变量初始化值
 - 执行静态代码块
 - 执行构造方法
+## 类加载器
+- Bootstap ClassLoader 启动类类加载器 加载JAVA安装目录下的lib目录中的核心类
+- Extension ClassLoader 扩展类类加载器 加载JAVA安装目录下的lib/ext目录中的类
