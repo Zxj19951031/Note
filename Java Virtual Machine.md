@@ -14,9 +14,44 @@ JAVA虚拟机是一个执行JAVA字节码文件（*.class）的进程。
 ### 解析
 - JVM将符号引用解析为直接引用
 ### 初始化
-- 为静态成员变量初始化值
+- 为静态成员变量赋初始化值
 - 执行静态代码块
 - 执行构造方法
 ## 类加载器
-- Bootstap ClassLoader 启动类类加载器 加载JAVA安装目录下的lib目录中的核心类
-- Extension ClassLoader 扩展类类加载器 加载JAVA安装目录下的lib/ext目录中的类
+- Bootstap ClassLoader 根类加载器 加载<JAVA_HOME>/lib目录中的核心类 由C++实现
+- Extension ClassLoader 扩展类类加载器（ExtClassLoader） 加载<JAVA_HOME>/lib/ext目录中的类或环境变量java.ext.dirs对应的路径下的类
+- Application ClassLoader 应用程序类加载器
+## 双亲委派机制
+类加载器（除根类加载器）在加载类时，会尝试让`parent`的`loadClass`方法进行加载类，若父类无法加载该类则下放权力给当前类加载器进行加载类
+```java
+java.lang.ClassLoader#loadClass(java.lang.String, boolean)
+```
+```java
+if (c == null) {
+    long t0 = System.nanoTime();
+    try {
+        if (parent != null) {
+            c = parent.loadClass(name, false);
+        } else {
+            c = findBootstrapClassOrNull(name);
+        }
+    } catch (ClassNotFoundException e) {
+        // ClassNotFoundException thrown if class not found
+        // from the non-null parent class loader
+    }
+
+    if (c == null) {
+        // If still not found, then invoke findClass in order
+        // to find the class.
+        long t1 = System.nanoTime();
+        c = findClass(name);
+
+        // this is the defining class loader; record the stats
+        sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+        sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+        sun.misc.PerfCounter.getFindClasses().increment();
+    }
+}
+```
+## 内存模型
+
