@@ -17,6 +17,35 @@ JAVA虚拟机是一个执行JAVA字节码文件（*.class）的进程。
 - 为静态成员变量赋初始化值
 - 执行静态代码块
 - 执行构造方法
+```java
+public class Main {
+    public static int a = 1;
+
+    static {
+        System.out.println("step 1 a = " + a);
+        a++;
+        System.out.println("step 2 a = " + a);
+    }
+
+    public Main() {
+        System.out.println("step 3 a = " + a);
+        Main.a++;
+        System.out.println("step 4 a = " + a);
+    }
+
+    public static void main(String[] args) {
+        // write your code here
+        new Main();
+        /*
+        output:
+        step 1 a = 1
+        step 2 a = 2
+        step 3 a = 2
+        step 4 a = 3
+         */
+    }
+}
+```
 ## 类加载器
 - Bootstap ClassLoader 根类加载器 加载<JAVA_HOME>/lib目录中的核心类 由C++实现
 - Extension ClassLoader 扩展类类加载器（ExtClassLoader） 加载<JAVA_HOME>/lib/ext目录中的类或环境变量java.ext.dirs对应的路径下的类
